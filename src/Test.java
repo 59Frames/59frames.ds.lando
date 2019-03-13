@@ -1,5 +1,5 @@
-import _59frames.ds.eggsy.CommandListener;
-import _59frames.ds.eggsy.model.Command;
+import _59frames.ds.lando.CommandListener;
+import _59frames.ds.lando.model.Command;
 
 public class Test {
     public static void main(String[] args) {

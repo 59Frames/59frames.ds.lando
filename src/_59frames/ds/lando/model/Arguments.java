@@ -1,4 +1,4 @@
-package _59frames.ds.eggsy.model;
+package _59frames.ds.lando.model;
 
 import java.util.HashMap;
 import java.util.function.BiConsumer;

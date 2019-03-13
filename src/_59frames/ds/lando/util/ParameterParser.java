@@ -1,7 +1,7 @@
-package _59frames.ds.eggsy.util;
+package _59frames.ds.lando.util;
 
-import _59frames.ds.eggsy.model.Argument;
-import _59frames.ds.eggsy.model.Arguments;
+import _59frames.ds.lando.model.Argument;
+import _59frames.ds.lando.model.Arguments;
 
 import java.util.List;
 

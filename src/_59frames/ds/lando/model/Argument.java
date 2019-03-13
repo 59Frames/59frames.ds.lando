@@ -1,4 +1,4 @@
-package _59frames.ds.eggsy.model;
+package _59frames.ds.lando.model;
 
 public class Argument {
     private final String key;

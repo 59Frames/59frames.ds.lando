@@ -1,7 +1,7 @@
-package _59frames.ds.eggsy;
+package _59frames.ds.lando;
 
-import _59frames.ds.eggsy.model.Command;
-import _59frames.ds.eggsy.util.ParameterParser;
+import _59frames.ds.lando.model.Command;
+import _59frames.ds.lando.util.ParameterParser;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
