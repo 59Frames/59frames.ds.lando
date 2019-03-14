@@ -130,6 +130,7 @@ public class CommandListener {
         private boolean isNamed;
         private boolean startWithBuild;
         private boolean hasHelpCommand;
+        private boolean hasExitCommand;
 
         public Builder() {
             this.parameterChar = '=';
@@ -137,6 +138,7 @@ public class CommandListener {
             this.inputStream = System.in;
             this.isNamed = true;
             this.hasHelpCommand = true;
+            this.hasExitCommand = true;
             this.startWithBuild = false;
         }
 
@@ -165,6 +167,11 @@ public class CommandListener {
             return this;
         }
 
+        public Builder hasDefaultExitCommand(final boolean val) {
+            this.hasExitCommand = val;
+            return this;
+        }
+
         public Builder startWithBuild() {
             return startWithBuild(true);
         }
@@ -189,6 +196,16 @@ public class CommandListener {
 
                     instance.output.format("+-----------------+----------------------------+----------------------------+%n");
                 }));
+            }
+
+            if (hasExitCommand) {
+                instance.add(new Command("exit", args -> {
+                    instance.stop();
+                    if (args.hasArgument("kill")) {
+                        if (args.getArgument("kill").getBool())
+                            System.exit(0);
+                    }
+                }, new String[]{}, new String[]{"kill"}));
             }
 
             if (startWithBuild)

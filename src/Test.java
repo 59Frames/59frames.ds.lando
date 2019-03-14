@@ -7,6 +7,7 @@ public class Test {
         var listener = CommandListener.builder()
                 .paramChar('=')
                 .hasDefaultHelpCommand(true)
+                .hasDefaultExitCommand(true)
                 .hasNamedArguments(true)
                 .startWithBuild(true)
                 .build();

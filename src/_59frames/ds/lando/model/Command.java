@@ -27,7 +27,7 @@ public class Command {
 
     public Command(@NotNull final String key, @NotNull final Event event, @NotNull final List<String> requiredArgs, @NotNull final List<String> optionalArgs) {
         if (key.split("\\s").length != 1)
-            throw new MalformedParametersException("Command key can only be one word");
+            throw new MalformedParametersException("Command key can only be a single word");
 
         this.key = key;
         this.event = event;
