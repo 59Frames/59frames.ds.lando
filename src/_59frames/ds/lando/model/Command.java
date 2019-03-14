@@ -8,21 +8,25 @@ public class Command {
     private final String key;
     private final Event event;
     private List<String> requiredArgs;
-    private List<String> optionalArgs = new ArrayList<>();
+    private List<String> optionalArgs;
 
     public Command(String key, Event event, String... requiredArgs) {
-        this(key, event, Arrays.asList(requiredArgs));
+        this(key, event, Arrays.asList(requiredArgs), new ArrayList<>());
+    }
+
+    public Command(String key, Event event, String[] requiredArgs, String... optionalArgs) {
+        this(key, event, Arrays.asList(requiredArgs), Arrays.asList(optionalArgs));
     }
 
     public Command(String key, Event event) {
-        this.key = key;
-        this.event = event;
+        this(key, event, new ArrayList<>(), new ArrayList<>());
     }
 
-    public Command(String key, Event event, List<String> requiredArgs) {
+    public Command(String key, Event event, List<String> requiredArgs, List<String> optionalArgs) {
         this.key = key;
         this.event = event;
         this.requiredArgs = requiredArgs;
+        this.optionalArgs = optionalArgs;
     }
 
     public void execute(Arguments args) {

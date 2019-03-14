@@ -20,22 +20,10 @@ public class CommandListener {
 
     private boolean running = false;
 
-    public CommandListener() {
-        this(System.in);
-    }
-
-    public CommandListener(final char parameterChar) {
-        this(System.in, System.out, parameterChar);
-    }
-
-    public CommandListener(@NotNull final InputStream stream) {
-        this(stream, System.err, '=');
-    }
-
-    public CommandListener(@NotNull final InputStream inputStream, @NotNull final OutputStream outputStream, final char parameterChar) {
+    private CommandListener(@NotNull final InputStream inputStream, @NotNull final OutputStream outputStream, @NotNull final ParameterParser parser) {
         this.output = new PrintStream(outputStream);
         this.scanner = new Scanner(inputStream);
-        this.parser = new ParameterParser(parameterChar);
+        this.parser = parser;
     }
 
     @NotNull
@@ -139,11 +127,15 @@ public class CommandListener {
         private char parameterChar;
         private InputStream inputStream;
         private OutputStream outputStream;
+        private boolean isNamed;
+        private boolean hasHelpCommand;
 
         public Builder() {
             this.parameterChar = '=';
             this.outputStream = System.err;
             this.inputStream = System.in;
+            this.isNamed = true;
+            this.hasHelpCommand = true;
         }
 
         public Builder paramChar(final char pChar) {
@@ -161,8 +153,34 @@ public class CommandListener {
             return this;
         }
 
+        public Builder paramsAreNamed(final boolean val) {
+            this.isNamed = val;
+            return this;
+        }
+
+        public Builder hasDefaultHelpCommand(final boolean val) {
+            this.hasHelpCommand = val;
+            return this;
+        }
+
         public CommandListener build() {
-            return new CommandListener(inputStream, outputStream, parameterChar);
+            final var instance = new CommandListener(inputStream, outputStream, new ParameterParser(parameterChar, isNamed));
+
+            if (hasHelpCommand) {
+                instance.add(new Command("help", args -> {
+                    final var leftAlignFormat = "| %-15s | %-26s | %-26s |%n";
+
+                    instance.output.format("+-----------------+----------------------------+----------------------------+%n");
+                    instance.output.format("| Command name    | Required Arguments         | Optional Arguments         |%n");
+                    instance.output.format("+-----------------+----------------------------+----------------------------+%n");
+
+                    instance.commands.forEach((key, command) -> instance.output.format(leftAlignFormat, key, command.getRequiredArgs(), command.getOptionalArgs()));
+
+                    instance.output.format("+-----------------+----------------------------+----------------------------+%n");
+                }));
+            }
+
+            return instance;
         }
     }
 }

@@ -7,9 +7,11 @@ import java.util.List;
 
 public class ParameterParser {
     private final char parameterChar;
+    private final boolean isNamed;
 
-    public ParameterParser(final char parameterChar) {
+    public ParameterParser(final char parameterChar, final boolean isNamed) {
         this.parameterChar = parameterChar;
+        this.isNamed = isNamed;
     }
 
     public Arguments parse(String[] args) {
@@ -25,13 +27,5 @@ public class ParameterParser {
             arguments.add(new Argument(argPair[0], argPair[1]));
         }
         return arguments;
-    }
-
-    public Arguments parse(String string) {
-        return parse(string.split(" "));
-    }
-
-    public Arguments parse(List<String> args) {
-        return parse(args.toArray(new String[0]));
     }
 }

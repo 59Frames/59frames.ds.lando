@@ -6,9 +6,21 @@ public class Test {
 
         var listener = CommandListener.builder()
                 .paramChar(':')
+                .hasDefaultHelpCommand(true)
                 .build();
 
-        listener.add(new Command("print", args1 -> System.out.println(String.format("My name is %s", args1.get("name"))), "name"));
+        listener.add(
+                new Command("print",
+                        args1 -> {
+                            if (args1.hasArgument("age")) {
+                                System.out.println(String.format("My name is %s and I am %d years old", args1.get("name"), args1.get("age").getInteger()));
+                            } else {
+                                System.out.println(String.format("My name is %s", args1.get("name")));
+                            }
+                        },
+                        new String[]{"name"},
+                        "age")
+        );
 
         listener.start();
     }
