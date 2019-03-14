@@ -4,9 +4,9 @@ import _59frames.ds.lando.model.Argument;
 import _59frames.ds.lando.model.Arguments;
 import _59frames.ds.lando.model.Command;
 
-import java.util.List;
-
 public class ParameterParser {
+    public static final char DEFAULT_PARAM_CHAR = '=';
+
     private final char parameterChar;
     private final boolean isNamed;
 
@@ -39,7 +39,7 @@ public class ParameterParser {
 
                 if (counter < command.countTotalArguments()) {
                     if (counter >= command.getRequiredArgs().size()) {
-                        arguments.add(new Argument(command.getOptionalArgs().get(counter-command.getRequiredArgs().size()), argString));
+                        arguments.add(new Argument(command.getOptionalArgs().get(counter - command.getRequiredArgs().size()), argString));
                     } else {
                         arguments.add(new Argument(command.getRequiredArgs().get(counter), argString));
                     }

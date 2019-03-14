@@ -5,9 +5,11 @@ import _59frames.ds.lando.util.ParameterParser;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -127,22 +129,24 @@ public class CommandListener {
         private char parameterChar;
         private InputStream inputStream;
         private OutputStream outputStream;
-        private boolean isNamed;
         private boolean startWithBuild;
+        private boolean hasNamedArguments;
         private boolean hasHelpCommand;
         private boolean hasExitCommand;
 
         public Builder() {
-            this.parameterChar = '=';
+            this.parameterChar = ParameterParser.DEFAULT_PARAM_CHAR;
             this.outputStream = System.err;
             this.inputStream = System.in;
-            this.isNamed = true;
+            this.hasNamedArguments = true;
             this.hasHelpCommand = true;
             this.hasExitCommand = true;
             this.startWithBuild = false;
         }
 
         public Builder paramChar(final char pChar) {
+            if (Character.isSpaceChar(pChar))
+                throw new InvalidParameterException("Parameter char can't be space");
             this.parameterChar = pChar;
             return this;
         }
@@ -157,8 +161,9 @@ public class CommandListener {
             return this;
         }
 
+        @Deprecated
         public Builder hasNamedArguments(final boolean val) {
-            this.isNamed = val;
+            this.hasNamedArguments = val;
             return this;
         }
 
@@ -182,7 +187,7 @@ public class CommandListener {
         }
 
         public CommandListener build() {
-            final var instance = new CommandListener(inputStream, outputStream, new ParameterParser(parameterChar, isNamed));
+            final var instance = new CommandListener(inputStream, outputStream, new ParameterParser(parameterChar, hasNamedArguments));
 
             if (hasHelpCommand) {
                 instance.add(new Command("help", args -> {
