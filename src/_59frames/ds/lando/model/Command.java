@@ -1,5 +1,8 @@
 package _59frames.ds.lando.model;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.lang.reflect.MalformedParametersException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -7,22 +10,25 @@ import java.util.List;
 public class Command {
     private final String key;
     private final Event event;
-    private List<String> requiredArgs;
-    private List<String> optionalArgs;
+    private final List<String> requiredArgs;
+    private final List<String> optionalArgs;
 
-    public Command(String key, Event event, String... requiredArgs) {
-        this(key, event, Arrays.asList(requiredArgs), new ArrayList<>());
-    }
-
-    public Command(String key, Event event, String[] requiredArgs, String... optionalArgs) {
-        this(key, event, Arrays.asList(requiredArgs), Arrays.asList(optionalArgs));
-    }
-
-    public Command(String key, Event event) {
+    public Command(@NotNull final String key, @NotNull final Event event) {
         this(key, event, new ArrayList<>(), new ArrayList<>());
     }
 
-    public Command(String key, Event event, List<String> requiredArgs, List<String> optionalArgs) {
+    public Command(@NotNull final String key, @NotNull final Event event, @NotNull final String[] requiredArgs) {
+        this(key, event, Arrays.asList(requiredArgs), new ArrayList<>());
+    }
+
+    public Command(@NotNull final String key, @NotNull final Event event, @NotNull final String[] requiredArgs, @NotNull final String[] optionalArgs) {
+        this(key, event, Arrays.asList(requiredArgs), Arrays.asList(optionalArgs));
+    }
+
+    public Command(@NotNull final String key, @NotNull final Event event, @NotNull final List<String> requiredArgs, @NotNull final List<String> optionalArgs) {
+        if (key.split("\\s").length != 1)
+            throw new MalformedParametersException("Command key can only be one word");
+
         this.key = key;
         this.event = event;
         this.requiredArgs = requiredArgs;
