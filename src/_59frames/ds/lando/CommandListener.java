@@ -128,6 +128,7 @@ public class CommandListener {
         private InputStream inputStream;
         private OutputStream outputStream;
         private boolean isNamed;
+        private boolean startWithBuild;
         private boolean hasHelpCommand;
 
         public Builder() {
@@ -136,6 +137,7 @@ public class CommandListener {
             this.inputStream = System.in;
             this.isNamed = true;
             this.hasHelpCommand = true;
+            this.startWithBuild = false;
         }
 
         public Builder paramChar(final char pChar) {
@@ -163,6 +165,15 @@ public class CommandListener {
             return this;
         }
 
+        public Builder startWithBuild() {
+            return startWithBuild(true);
+        }
+
+        public Builder startWithBuild(final boolean val) {
+            this.startWithBuild = val;
+            return this;
+        }
+
         public CommandListener build() {
             final var instance = new CommandListener(inputStream, outputStream, new ParameterParser(parameterChar, isNamed));
 
@@ -179,6 +190,9 @@ public class CommandListener {
                     instance.output.format("+-----------------+----------------------------+----------------------------+%n");
                 }));
             }
+
+            if (startWithBuild)
+                instance.start();
 
             return instance;
         }
