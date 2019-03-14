@@ -13,15 +13,15 @@ public class Argument {
         return this.key;
     }
 
-    public boolean getBool() {
+    public boolean toBool() {
         return Boolean.parseBoolean(this.value);
     }
 
-    public double getDouble() {
+    public double toDouble() {
         return Double.parseDouble(this.value);
     }
 
-    public int getInteger() {
+    public int toInteger() {
         return Integer.parseInt(this.value);
     }
 

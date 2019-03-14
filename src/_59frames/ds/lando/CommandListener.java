@@ -5,12 +5,12 @@ import _59frames.ds.lando.util.ParameterParser;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.security.InvalidParameterException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class CommandListener {
@@ -36,6 +36,7 @@ public class CommandListener {
 
     public void add(Command command) {
         this.commands.put(command.getKey(), command);
+        sortCommands();
     }
 
     public void start() {
@@ -125,6 +126,17 @@ public class CommandListener {
         output.println(String.format("Unknown parameter { %s }", parameter));
     }
 
+    private void sortCommands() {
+        final var sortedMap = new HashMap<String, Command>();
+
+        commands.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByKey())
+                .forEachOrdered(x -> sortedMap.put(x.getKey(), x.getValue()));
+
+        this.commands = sortedMap;
+    }
+
     public static class Builder {
         private char parameterChar;
         private InputStream inputStream;
@@ -191,6 +203,8 @@ public class CommandListener {
 
             if (hasHelpCommand) {
                 instance.add(new Command("help", args -> {
+                    instance.sortCommands();
+
                     final var leftAlignFormat = "| %-15s | %-26s | %-26s |%n";
 
                     instance.output.format("+-----------------+----------------------------+----------------------------+%n");
@@ -207,7 +221,7 @@ public class CommandListener {
                 instance.add(new Command("exit", args -> {
                     instance.stop();
                     if (args.hasArgument("kill")) {
-                        if (args.getArgument("kill").getBool())
+                        if (args.getArgument("kill").toBool())
                             System.exit(0);
                     }
                 }, new String[]{}, new String[]{"kill"}));

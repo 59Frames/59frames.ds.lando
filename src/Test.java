@@ -1,5 +1,6 @@
+import _59frames.ds.lando.CommandCreator;
 import _59frames.ds.lando.CommandListener;
-import _59frames.ds.lando.model.Command;
+import _59frames.ds.lando.model.Event;
 import _59frames.ds.lando.util.ParameterParser;
 
 public class Test {
@@ -12,17 +13,23 @@ public class Test {
                 .startWithBuild(true)
                 .build();
 
-        listener.add(
-                new Command("print",
-                        args1 -> {
-                            if (args1.hasArgument("place")) {
-                                System.out.println(String.format("My name is %s and I am %d years old and my hometown is %s", args1.getArgument("name"), args1.getArgument("age").getInteger(), args1.getArgument("place")));
-                            } else {
-                                System.out.println(String.format("My name is %s and I am %d years old", args1.getArgument("name"), args1.getArgument("age").getInteger()));
-                            }
-                        },
-                        new String[]{"name", "age"},
-                        new String[]{"place"})
-        );
+        Event printEvent = arguments -> {
+            if (arguments.hasArgument("place")) {
+                var place = arguments.getArgument("place").getValue();
+                System.out.println(String.format("My name is %s, I am %d years old and I grew up in %s.", arguments.getArgument("name"), arguments.getArgument("age").toInteger(), place));
+            } else {
+                System.out.println(String.format("My name is %s, I am %d years old.", arguments.getArgument("name"), arguments.getArgument("age").toInteger()));
+            }
+        };
+
+        var printPerson = CommandCreator.creator()
+                .key("print")
+                .event(printEvent)
+                .addRequiredArg("name")
+                .addRequiredArg("age")
+                .addOptionalArg("place")
+                .create();
+
+        listener.add(printPerson);
     }
 }
