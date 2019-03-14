@@ -18,7 +18,7 @@ public class Arguments {
         args.put(arg.getKey(), arg);
     }
 
-    public Argument get(String key) {
+    public Argument getArgument(String key) {
         return args.get(key);
     }
 

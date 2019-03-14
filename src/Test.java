@@ -7,7 +7,21 @@ public class Test {
         var listener = CommandListener.builder()
                 .paramChar('=')
                 .hasDefaultHelpCommand(true)
+                .hasNamedArguments(false)
                 .build();
+
+        listener.add(
+                new Command("print",
+                        args1 -> {
+                            if (args1.hasArgument("place")) {
+                                System.out.println(String.format("My name is %s and I am %d years old and my hometown is %s", args1.getArgument("name"), args1.getArgument("age").getInteger(), args1.getArgument("place")));
+                            } else {
+                                System.out.println(String.format("My name is %s and I am %d years old", args1.getArgument("name"), args1.getArgument("age").getInteger()));
+                            }
+                        },
+                        new String[]{"name", "age"},
+                        new String[]{"place"})
+        );
 
         listener.start();
     }

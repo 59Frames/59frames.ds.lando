@@ -35,6 +35,10 @@ public class Command {
         this.optionalArgs = optionalArgs;
     }
 
+    public int countTotalArguments() {
+        return requiredArgs.size() + optionalArgs.size();
+    }
+
     public void execute(Arguments args) {
         event.onEvent(args);
     }

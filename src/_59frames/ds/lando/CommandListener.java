@@ -58,7 +58,7 @@ public class CommandListener {
     private void listen() {
         try {
             String s = scanner.nextLine();
-            if (s != null)
+            if (s != null && !(s.isEmpty() || s.isBlank()))
                 interpret(s);
         } catch (Exception e) {
             e.printStackTrace();
@@ -78,7 +78,7 @@ public class CommandListener {
             var argStrings = new String[input.length - 1];
             System.arraycopy(input, 1, argStrings, 0, argStrings.length);
 
-            var args = parser.parse(argStrings);
+            var args = parser.parse(argStrings, c);
 
             if (c.hasRequiredArgs()) {
                 for (var name : c.getRequiredArgs()) {
@@ -153,7 +153,7 @@ public class CommandListener {
             return this;
         }
 
-        public Builder paramsAreNamed(final boolean val) {
+        public Builder hasNamedArguments(final boolean val) {
             this.isNamed = val;
             return this;
         }
