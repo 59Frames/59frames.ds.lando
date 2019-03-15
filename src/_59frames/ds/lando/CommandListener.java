@@ -168,7 +168,7 @@ public class CommandListener {
             return this;
         }
 
-        public Builder output(@NotNull OutputStream output) {
+        public Builder errorOutput(@NotNull OutputStream output) {
             this.outputStream = output;
             return this;
         }
