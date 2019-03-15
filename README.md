@@ -58,7 +58,7 @@ public class Test {
                 .startWithBuild(true)
                 .hasDefaultExitCommand(true)
                 .hasDefaultHelpCommand(true)
-                .hasNamedArguments(false) // we recommend not to make the arguments unnamed because this can yet cause improper behaviour
+                .hasNamedArguments(false) // we recommend not to make the arguments named because this can yet cause improper behaviour
                 .build();
     }
 }
@@ -84,6 +84,7 @@ public class Test {
                         },
                         new String[]{"first"}, // Required Arguments
                         new String[]{"second"}); // Optional Arguments
+                        
         // I do not really support it since it does look kind of ugly ...
         // Overview = null
         // So I came up with a CommandCreator
