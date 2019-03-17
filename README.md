@@ -42,15 +42,15 @@ So before we start creating Commands, let's check out the features of our Comman
 public class Test {
     public static void main(String[] args){
         CommandListener simpleListener = CommandListener.builder().build(); 
-        // This is a very basic listener.
-        // We use System.in as input,
+        // Above is a very basic listener.
+        // It uses System.in as input,
         // System.err as errorOutput
         // "exit" and "help" commands are integrated
         // will not start with build.
         // the default parameter char is '='
-        // and it has named arguments
+        // it has named arguments
         
-        
+        // below is a customized one
         CommandListener customListener = CommandListener.builder()
                 .input(System.in)
                 .errorOutput(System.err)
@@ -58,7 +58,7 @@ public class Test {
                 .startWithBuild(true)
                 .hasDefaultExitCommand(true)
                 .hasDefaultHelpCommand(true)
-                .hasNamedArguments(false) // we recommend not to make the arguments named because this can yet cause improper behaviour
+                .hasNamedArguments(true) // we recommend to make the arguments named
                 .build();
     }
 }
