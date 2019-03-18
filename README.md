@@ -34,7 +34,7 @@ public class Test {
         // Now if you type "hello" into your java terminal, you should simply see
         // "Hello World!"
         // Just without the quotes
-        // then I type "exit" to close the programm
+        // then I type "exit" to stop the listener from listening.
     }
 }
 ```
