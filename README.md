@@ -13,6 +13,9 @@ Currently, lando is running on Java 11 but I will add downward compatibility wit
 3. You are good to go!
 
 Here's a short demo. You will find more information down below.
+
+![](assets/Lando_Home.gif)
+
 ```java
 public class Test {
     public static void main(String[] args){
