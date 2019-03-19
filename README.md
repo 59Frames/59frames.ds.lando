@@ -14,7 +14,7 @@ Currently, lando is running on Java 11 but I will add downward compatibility wit
 
 Here's a short demo. You will find more information down below.
 
-![](assets/Lando_Home.gif)
+![](assets/Lando_Home_3.gif)
 
 ```java
 public class Test {
