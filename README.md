@@ -19,8 +19,7 @@ Here's a short demo. You will find more information down below.
 ```java
 public class Test {
     public static void main(String[] args){
-        CommandListener listener = CommandListener.builder()
-                .build();
+        CommandListener listener = CommandListener.builder().build();
         
         Command command = CommandCreator.creator()
                 .key("hello")
