@@ -17,14 +17,14 @@ Here's a short demo. You will find more information down below.
 ![](assets/Lando_Home_3.gif)
 
 ```java
-public class Test {
+public class Example {
     public static void main(String[] args){
         CommandListener listener = CommandListener.builder().build();
         
-        Command command = CommandCreator.creator()
+        Command command = CommandFactory.factory()
                 .key("hello")
                 .event(arguments -> System.out.println("Hello World!"))
-                .create();
+                .build();
         
         listener.add(command);
         
@@ -92,7 +92,7 @@ public class Test {
         // Overview = null
         CommandFactory
         
-        command = CommandCreator.creator()
+        command = CommandFactory.factory()
                 .key("say")
                 .event(arguments -> {
                     // The event
@@ -103,9 +103,9 @@ public class Test {
                         str = String.format("%s %s", str, arguments.getArgument("second"));
                     System.out.println(str);
                 })
-                .addRequiredArg("first")
-                .addOptionalArg("second")
-                .create();
+                .addRequiredArgument("first")
+                .addOptionalArgument("second")
+                .build();
         
         // Only thing is that if you don't specify the key and or event,
         // It will throw an exception
