@@ -90,7 +90,7 @@ public class Test {
                         
         // I do not really support it since it does look kind of ugly ...
         // Overview = null
-        // So I came up with a CommandCreator
+        CommandFactory
         
         command = CommandCreator.creator()
                 .key("say")

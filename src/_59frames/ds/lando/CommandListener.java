@@ -1,5 +1,6 @@
 package _59frames.ds.lando;
 
+import _59frames.ds.lando.model.ArgumentConstraint;
 import _59frames.ds.lando.model.Command;
 import _59frames.ds.lando.util.ArgumentParser;
 import _59frames.ds.lando.util.ArgumentValidator;
@@ -11,6 +12,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.security.InvalidParameterException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -19,7 +21,7 @@ public class CommandListener {
     private final Scanner scanner;
     private final ArgumentParser parser;
 
-    private HashMap<String, Command> commands = new HashMap<>();
+    private LinkedHashMap<String, Command> commands = new LinkedHashMap<>();
 
     private boolean running = false;
 
@@ -144,7 +146,7 @@ public class CommandListener {
     }
 
     private void sortCommands() {
-        final var sortedMap = new HashMap<String, Command>();
+        final var sortedMap = new LinkedHashMap<String, Command>();
 
         commands.entrySet()
                 .stream()
@@ -234,7 +236,7 @@ public class CommandListener {
             }
 
             if (hasExitCommand) {
-                instance.add(CommandCreator.creator()
+                instance.add(CommandFactory.factory()
                         .key("exit")
                         .event(args -> {
                             instance.stop();
@@ -243,8 +245,8 @@ public class CommandListener {
                                     System.out.println(0);
                             }
                         })
-                        .addOptionalArg("kill", Boolean::parseBoolean)
-                        .create());
+                        .addOptionalArgument("kill", ArgumentConstraint.BOOLEAN)
+                        .build());
             }
 
             if (startWithBuild)

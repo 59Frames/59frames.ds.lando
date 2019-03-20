@@ -1,17 +1,17 @@
 package _59frames.ds.lando.model;
 
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.function.BiConsumer;
 
 public class Arguments {
-    private final HashMap<String, Argument> args;
+    private final LinkedHashMap<String, Argument> args;
 
     public Arguments() {
-        this(new HashMap<>());
+        this(new LinkedHashMap<>());
     }
 
-    public Arguments(HashMap<String, Argument> args) {
+    public Arguments(LinkedHashMap<String, Argument> args) {
         this.args = args;
     }
 

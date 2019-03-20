@@ -5,16 +5,20 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Predicate;
 
 public class ArgumentConstraint {
+    public static final Predicate<String> STRING = val -> true;
+    public static final Predicate<String> NUMBER = val -> val.matches("^-?\\d*\\.?\\d+$");
+    public static final Predicate<String> BOOLEAN = val -> (val.equalsIgnoreCase("true") || val.equalsIgnoreCase("false"));
+
     private final String key;
     private final boolean isRequired;
     private final Predicate<String> predicate;
 
     public ArgumentConstraint(@NotNull final String key) {
-        this(key, false, val -> true);
+        this(key, false);
     }
 
     public ArgumentConstraint(@NotNull final String key, final boolean isRequired) {
-        this(key, isRequired, val -> true);
+        this(key, isRequired, STRING);
     }
 
     public ArgumentConstraint(@NotNull final String key, @NotNull final Predicate<String> predicate) {
