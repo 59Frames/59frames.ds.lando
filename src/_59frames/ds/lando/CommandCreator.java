@@ -5,9 +5,7 @@ import _59frames.ds.lando.model.Event;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * {@link CommandCreator}
@@ -57,22 +55,26 @@ public class CommandCreator {
     }
 
     public CommandCreator addAllRequiredArgs(@NotNull final String... requiredArgs) {
-        this.requiredArgs.addAll(Arrays.asList(requiredArgs));
-        return this;
+        if (requiredArgs.length == 0)
+            return this;
+
+        return this.addAllOptionalArgs(Arrays.asList(requiredArgs));
     }
 
     public CommandCreator addAllOptionalArgs(@NotNull final String... optionalArgs) {
-        this.optionalArgs.addAll(Arrays.asList(optionalArgs));
-        return this;
+        if (optionalArgs.length == 0)
+            return this;
+
+        return this.addAllOptionalArgs(Arrays.asList(optionalArgs));
     }
 
     public CommandCreator addAllRequiredArgs(@NotNull final List<String> requiredArgs) {
-        this.requiredArgs.addAll(requiredArgs);
+        this.requiredArgs.addAll(clear(requiredArgs));
         return this;
     }
 
     public CommandCreator addAllOptionalArgs(@NotNull final List<String> optionalArgs) {
-        this.optionalArgs.addAll(optionalArgs);
+        this.optionalArgs.addAll(clear(optionalArgs));
         return this;
     }
 
@@ -84,5 +86,16 @@ public class CommandCreator {
             throw new IllegalArgumentException("Event is null");
 
         return new Command(key, event, requiredArgs, optionalArgs);
+    }
+
+    @NotNull
+    @Contract("_ -> new")
+    private Collection<? extends String> clear(List<String> list) {
+        final var set = new HashSet<>(list);
+
+        set.removeIf(String::isBlank);
+        set.removeIf(String::isEmpty);
+
+        return new ArrayList<>(set);
     }
 }

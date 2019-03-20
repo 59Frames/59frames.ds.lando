@@ -1,7 +1,7 @@
 package _59frames.ds.lando;
 
 import _59frames.ds.lando.model.Command;
-import _59frames.ds.lando.util.ParameterParser;
+import _59frames.ds.lando.util.ArgumentParser;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,13 +16,13 @@ import java.util.Scanner;
 public class CommandListener {
     private final PrintStream output;
     private final Scanner scanner;
-    private final ParameterParser parser;
+    private final ArgumentParser parser;
 
     private HashMap<String, Command> commands = new HashMap<>();
 
     private boolean running = false;
 
-    private CommandListener(@NotNull final InputStream inputStream, @NotNull final OutputStream outputStream, @NotNull final ParameterParser parser) {
+    private CommandListener(@NotNull final InputStream inputStream, @NotNull final OutputStream outputStream, @NotNull final ArgumentParser parser) {
         this.output = new PrintStream(outputStream);
         this.scanner = new Scanner(inputStream);
         this.parser = parser;
@@ -147,7 +147,7 @@ public class CommandListener {
         private boolean hasExitCommand;
 
         public Builder() {
-            this.parameterChar = ParameterParser.DEFAULT_PARAM_CHAR;
+            this.parameterChar = ArgumentParser.DEFAULT_PARAM_CHAR;
             this.outputStream = System.err;
             this.inputStream = System.in;
             this.hasNamedArguments = true;
@@ -199,21 +199,21 @@ public class CommandListener {
         }
 
         public CommandListener build() {
-            final var instance = new CommandListener(inputStream, outputStream, new ParameterParser(parameterChar, hasNamedArguments));
+            final var instance = new CommandListener(inputStream, outputStream, new ArgumentParser(parameterChar, hasNamedArguments));
 
             if (hasHelpCommand) {
                 instance.add(new Command("help", args -> {
                     instance.sortCommands();
 
-                    final var leftAlignFormat = "| %-15s | %-26s | %-26s |%n";
+                    final var leftAlignFormat = "| %-16.16s | %-48.48s | %-48.48s |%n";
 
-                    instance.output.format("+-----------------+----------------------------+----------------------------+%n");
-                    instance.output.format("| Command name    | Required Arguments         | Optional Arguments         |%n");
-                    instance.output.format("+-----------------+----------------------------+----------------------------+%n");
+                    instance.output.format("+------------------+--------------------------------------------------+--------------------------------------------------+%n");
+                    instance.output.format("| Command key      | Required Arguments                               | Optional Arguments                               |%n");
+                    instance.output.format("+------------------+--------------------------------------------------+--------------------------------------------------+%n");
 
                     instance.commands.forEach((key, command) -> instance.output.format(leftAlignFormat, key, command.getRequiredArgs(), command.getOptionalArgs()));
 
-                    instance.output.format("+-----------------+----------------------------+----------------------------+%n");
+                    instance.output.format("+------------------+--------------------------------------------------+--------------------------------------------------+%n");
                 }));
             }
 
