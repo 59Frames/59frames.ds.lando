@@ -90,12 +90,13 @@ public class CommandCreator {
 
     @NotNull
     @Contract("_ -> new")
-    private Collection<? extends String> clear(List<String> list) {
-        final var set = new HashSet<>(list);
+    private List<? extends String> clear(@NotNull List<String> list) {
 
-        set.removeIf(String::isBlank);
-        set.removeIf(String::isEmpty);
+        var linkedList = new LinkedList<>(list);
 
-        return new ArrayList<>(set);
+        linkedList.removeIf(String::isBlank);
+        linkedList.removeIf(String::isEmpty);
+
+        return linkedList;
     }
 }

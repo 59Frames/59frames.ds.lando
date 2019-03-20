@@ -173,7 +173,6 @@ public class CommandListener {
             return this;
         }
 
-        @Deprecated
         public Builder hasNamedArguments(final boolean val) {
             this.hasNamedArguments = val;
             return this;
