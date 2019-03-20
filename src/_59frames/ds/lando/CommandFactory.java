@@ -1,6 +1,6 @@
 package _59frames.ds.lando;
 
-import _59frames.ds.lando.model.ArgumentConstraint;
+import _59frames.ds.lando.model.Constraint;
 import _59frames.ds.lando.model.Command;
 import _59frames.ds.lando.model.Event;
 import org.jetbrains.annotations.Contract;
@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * {@link CommandFactory}
@@ -21,7 +20,7 @@ public class CommandFactory {
 
     private String key;
     private Event event;
-    private List<ArgumentConstraint> constraints;
+    private List<Constraint> constraints;
 
     public CommandFactory() {
         this.key = null;
@@ -46,26 +45,26 @@ public class CommandFactory {
     }
 
     public CommandFactory addRequiredArgument(@NotNull final String key) {
-        return this.addConstraint(new ArgumentConstraint(key, true));
+        return this.addConstraint(new Constraint(key, true));
     }
 
     public CommandFactory addRequiredArgument(@NotNull final String key, @NotNull final Predicate<String> predicate) {
-        return this.addConstraint(new ArgumentConstraint(key, true, predicate));
+        return this.addConstraint(new Constraint(key, true, predicate));
     }
 
     public CommandFactory addOptionalArgument(@NotNull final String key) {
-        return this.addConstraint(new ArgumentConstraint(key, false));
+        return this.addConstraint(new Constraint(key, false));
     }
 
     public CommandFactory addOptionalArgument(@NotNull final String key, @NotNull final Predicate<String> predicate) {
-        return this.addConstraint(new ArgumentConstraint(key, false, predicate));
+        return this.addConstraint(new Constraint(key, false, predicate));
     }
 
     public CommandFactory addConstraint(@NotNull final String key, final boolean required, @NotNull final Predicate<String> predicate) {
-        return this.addConstraint(new ArgumentConstraint(key, required, predicate));
+        return this.addConstraint(new Constraint(key, required, predicate));
     }
 
-    public CommandFactory addConstraint(ArgumentConstraint constraint) {
+    public CommandFactory addConstraint(Constraint constraint) {
         this.constraints.add(constraint);
         return this;
     }

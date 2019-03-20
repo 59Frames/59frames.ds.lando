@@ -1,6 +1,6 @@
 package _59frames.ds.lando;
 
-import _59frames.ds.lando.model.ArgumentConstraint;
+import _59frames.ds.lando.model.Constraint;
 import _59frames.ds.lando.model.Command;
 import _59frames.ds.lando.util.ArgumentParser;
 import _59frames.ds.lando.util.ArgumentValidator;
@@ -11,17 +11,17 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.security.InvalidParameterException;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 public class CommandListener {
     private final PrintStream output;
     private final Scanner scanner;
     private final ArgumentParser parser;
 
-    private LinkedHashMap<String, Command> commands = new LinkedHashMap<>();
+    private TreeMap<String, Command> commands = new TreeMap<>();
 
     private boolean running = false;
 
@@ -35,11 +35,6 @@ public class CommandListener {
     @Contract(" -> new")
     public static Builder builder() {
         return new Builder();
-    }
-
-    public void add(Command command) {
-        this.commands.put(command.getKey(), command);
-        sortCommands();
     }
 
     public void start() {
@@ -59,6 +54,10 @@ public class CommandListener {
 
     public boolean isRunning() {
         return running;
+    }
+
+    public void add(Command command) {
+        this.commands.put(command.getKey(), command);
     }
 
     private void listen() {
@@ -88,7 +87,7 @@ public class CommandListener {
 
             if (c.hasRequiredArgs()) {
                 for (var name : c.getRequiredArgs()) {
-                    if (!args.hasArgument(name.getKey())) {
+                    if (!args.has(name.getKey())) {
                         missingArgument(name.getKey());
                         return;
                     }
@@ -107,10 +106,7 @@ public class CommandListener {
             while (iterator.hasNext()) {
                 var arg = iterator.next();
 
-                if (!c.getConstraints().hasConstraint(arg.getKey()))
-                    invalidArgument(arg.getKey());
-
-                if (!ArgumentValidator.validate(arg, c.getConstraint(arg.getKey())))
+                if (!c.getConstraints().has(arg.getKey()) || !ArgumentValidator.validate(arg, c.getConstraint(arg.getKey())))
                     invalidArgument(arg.getKey());
             }
 
@@ -142,11 +138,11 @@ public class CommandListener {
     }
 
     private void invalidArgument(String argument) {
-        output.println(String.format("invalid argument { %s }", argument));
+        output.println(String.format("invalid argument value thrown by { %s }", argument));
     }
 
     private void sortCommands() {
-        final var sortedMap = new LinkedHashMap<String, Command>();
+        final var sortedMap = new TreeMap<String, Command>();
 
         commands.entrySet()
                 .stream()
@@ -221,7 +217,7 @@ public class CommandListener {
 
             if (hasHelpCommand) {
                 instance.add(new Command("help", args -> {
-                    instance.sortCommands();
+                    //instance.sortCommands();
 
                     final var leftAlignFormat = "| %-16.16s | %-48.48s | %-48.48s |%n";
 
@@ -240,12 +236,12 @@ public class CommandListener {
                         .key("exit")
                         .event(args -> {
                             instance.stop();
-                            if (args.hasArgument("kill")) {
-                                if (args.getArgument("kill").toBool())
+                            if (args.has("kill")) {
+                                if (args.get("kill").toBool())
                                     System.out.println(0);
                             }
                         })
-                        .addOptionalArgument("kill", ArgumentConstraint.BOOLEAN)
+                        .addOptionalArgument("kill", Constraint.BOOLEAN)
                         .build());
             }
 

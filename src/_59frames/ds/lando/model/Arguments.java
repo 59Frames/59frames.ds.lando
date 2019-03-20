@@ -19,11 +19,11 @@ public class Arguments {
         args.put(arg.getKey(), arg);
     }
 
-    public Argument getArgument(String key) {
+    public Argument get(String key) {
         return args.get(key);
     }
 
-    public boolean hasArgument(String key) {
+    public boolean has(String key) {
         return args.containsKey(key);
     }
 

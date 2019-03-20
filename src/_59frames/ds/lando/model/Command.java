@@ -6,28 +6,27 @@ import java.lang.reflect.MalformedParametersException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Command {
     private final String key;
     private final Event event;
-    private final ArgumentConstraints constraints;
+    private final Constraints constraints;
 
     public Command(@NotNull final String key, @NotNull final Event event) {
         this(key, event, new ArrayList<>());
     }
 
-    public Command(@NotNull final String key, @NotNull final Event event, @NotNull final ArgumentConstraint... constraints) {
+    public Command(@NotNull final String key, @NotNull final Event event, @NotNull final Constraint... constraints) {
         this(key, event, Arrays.asList(constraints));
     }
 
-    public Command(@NotNull final String key, @NotNull final Event event, @NotNull final List<ArgumentConstraint> constraints) {
+    public Command(@NotNull final String key, @NotNull final Event event, @NotNull final List<Constraint> constraints) {
         if (key.split("\\s").length != 1)
             throw new MalformedParametersException("Command key can only be a single word");
 
         this.key = key;
         this.event = event;
-        this.constraints = new ArgumentConstraints(constraints);
+        this.constraints = new Constraints(constraints);
     }
 
     public int countTotalArguments() {
@@ -46,19 +45,19 @@ public class Command {
         return this.constraints.hasOptionalArgs();
     }
 
-    public List<ArgumentConstraint> getOptionalArgs() {
+    public List<Constraint> getOptionalArgs() {
         return this.constraints.getOptionalArgs();
     }
 
-    public List<ArgumentConstraint> getRequiredArgs() {
+    public List<Constraint> getRequiredArgs() {
         return this.constraints.getRequiredArgs();
     }
 
-    public ArgumentConstraints getConstraints() {
+    public Constraints getConstraints() {
         return this.constraints;
     }
 
-    public ArgumentConstraint getConstraint(String key) {
+    public Constraint getConstraint(String key) {
         return this.constraints.get(key);
     }
 
@@ -67,6 +66,6 @@ public class Command {
     }
 
     public boolean hasConstraint(String name) {
-        return this.constraints.hasConstraint(name);
+        return this.constraints.has(name);
     }
 }
