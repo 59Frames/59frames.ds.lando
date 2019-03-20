@@ -1,6 +1,7 @@
 package _59frames.ds.lando.model;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.function.BiConsumer;
 
 public class Arguments {
@@ -36,5 +37,13 @@ public class Arguments {
 
     public void forEach(BiConsumer<String, Argument> action) {
         this.args.forEach(action);
+    }
+
+    public int size() {
+        return this.args.size();
+    }
+
+    public Iterator<Argument> iterator() {
+        return this.args.values().iterator();
     }
 }

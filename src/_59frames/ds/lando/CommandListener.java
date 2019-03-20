@@ -2,6 +2,7 @@ package _59frames.ds.lando;
 
 import _59frames.ds.lando.model.Command;
 import _59frames.ds.lando.util.ArgumentParser;
+import _59frames.ds.lando.util.ArgumentValidator;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -85,8 +86,8 @@ public class CommandListener {
 
             if (c.hasRequiredArgs()) {
                 for (var name : c.getRequiredArgs()) {
-                    if (!args.hasArgument(name)) {
-                        missingParameter(name);
+                    if (!args.hasArgument(name.getKey())) {
+                        missingArgument(name.getKey());
                         return;
                     }
                 }
@@ -94,13 +95,25 @@ public class CommandListener {
 
             if (c.hasOptionalArgs()) {
                 for (var name : args.keys()) {
-                    if (!(c.getRequiredArgs().contains(name) || c.getOptionalArgs().contains(name))) {
-                        unknownParameter(name);
+                    if (!c.hasConstraint(name)) {
+                        unknownArgument(name);
                     }
                 }
             }
 
-            c.execute(args);
+            var iterator = args.iterator();
+            while (iterator.hasNext()) {
+                var arg = iterator.next();
+
+                if (!c.getConstraints().hasConstraint(arg.getKey()))
+                    invalidArgument(arg.getKey());
+
+                if (!ArgumentValidator.validate(arg, c.getConstraint(arg.getKey())))
+                    invalidArgument(arg.getKey());
+            }
+
+            if (ArgumentValidator.validate(args, c.getConstraints()))
+                c.execute(args);
         } else {
             unknownCommand(key);
         }
@@ -118,12 +131,16 @@ public class CommandListener {
         output.println(String.format("Unknown command { %s }", command));
     }
 
-    private void missingParameter(String parameter) {
-        output.println(String.format("Missing parameter { %s }", parameter));
+    private void missingArgument(String argument) {
+        output.println(String.format("Missing argument { %s }", argument));
     }
 
-    private void unknownParameter(String parameter) {
-        output.println(String.format("Unknown parameter { %s }", parameter));
+    private void unknownArgument(String argument) {
+        output.println(String.format("Unknown argument { %s }", argument));
+    }
+
+    private void invalidArgument(String argument) {
+        output.println(String.format("invalid argument { %s }", argument));
     }
 
     private void sortCommands() {
@@ -217,13 +234,17 @@ public class CommandListener {
             }
 
             if (hasExitCommand) {
-                instance.add(new Command("exit", args -> {
-                    instance.stop();
-                    if (args.hasArgument("kill")) {
-                        if (args.getArgument("kill").toBool())
-                            System.exit(0);
-                    }
-                }, new String[]{}, new String[]{"kill"}));
+                instance.add(CommandCreator.creator()
+                        .key("exit")
+                        .event(args -> {
+                            instance.stop();
+                            if (args.hasArgument("kill")) {
+                                if (args.getArgument("kill").toBool())
+                                    System.out.println(0);
+                            }
+                        })
+                        .addOptionalArg("kill", Boolean::parseBoolean)
+                        .create());
             }
 
             if (startWithBuild)

@@ -1,11 +1,14 @@
 package _59frames.ds.lando;
 
+import _59frames.ds.lando.model.ArgumentConstraint;
 import _59frames.ds.lando.model.Command;
 import _59frames.ds.lando.model.Event;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * {@link CommandCreator}
@@ -18,14 +21,12 @@ public class CommandCreator {
 
     private String key;
     private Event event;
-    private List<String> requiredArgs;
-    private List<String> optionalArgs;
+    private List<ArgumentConstraint> constraints;
 
     public CommandCreator() {
         this.key = null;
         this.event = null;
-        this.requiredArgs = new ArrayList<>();
-        this.optionalArgs = new ArrayList<>();
+        this.constraints = new ArrayList<>();
     }
 
     @Contract("-> new")
@@ -45,13 +46,19 @@ public class CommandCreator {
     }
 
     public CommandCreator addRequiredArg(@NotNull final String key) {
-        this.requiredArgs.add(key);
-        return this;
+        return this.addConstraint(new ArgumentConstraint(key, true));
+    }
+
+    public CommandCreator addRequiredArg(@NotNull final String key, @NotNull final Predicate<String> predicate) {
+        return this.addConstraint(new ArgumentConstraint(key, true, predicate));
     }
 
     public CommandCreator addOptionalArg(@NotNull final String key) {
-        this.optionalArgs.add(key);
-        return this;
+        return this.addConstraint(new ArgumentConstraint(key, false));
+    }
+
+    public CommandCreator addOptionalArg(@NotNull final String key, @NotNull final Predicate<String> predicate) {
+        return this.addConstraint(new ArgumentConstraint(key, false, predicate));
     }
 
     public CommandCreator addAllRequiredArgs(@NotNull final String... requiredArgs) {
@@ -59,6 +66,16 @@ public class CommandCreator {
             return this;
 
         return this.addAllOptionalArgs(Arrays.asList(requiredArgs));
+    }
+
+    public CommandCreator addConstraint(@NotNull final String key, final boolean required, @NotNull final Predicate<String> predicate) {
+        this.constraints.add(new ArgumentConstraint(key, required, predicate));
+        return this;
+    }
+
+    public CommandCreator addConstraint(ArgumentConstraint constraint) {
+        this.constraints.add(constraint);
+        return this;
     }
 
     public CommandCreator addAllOptionalArgs(@NotNull final String... optionalArgs) {
@@ -69,12 +86,12 @@ public class CommandCreator {
     }
 
     public CommandCreator addAllRequiredArgs(@NotNull final List<String> requiredArgs) {
-        this.requiredArgs.addAll(clear(requiredArgs));
+        this.constraints.addAll(clear(requiredArgs).stream().map(val -> new ArgumentConstraint(val, true)).collect(Collectors.toList()));
         return this;
     }
 
     public CommandCreator addAllOptionalArgs(@NotNull final List<String> optionalArgs) {
-        this.optionalArgs.addAll(clear(optionalArgs));
+        this.constraints.addAll(clear(optionalArgs).stream().map(val -> new ArgumentConstraint(val, false)).collect(Collectors.toList()));
         return this;
     }
 
@@ -85,7 +102,7 @@ public class CommandCreator {
         if (this.event == null)
             throw new IllegalArgumentException("Event is null");
 
-        return new Command(key, event, requiredArgs, optionalArgs);
+        return new Command(key, event, constraints);
     }
 
     @NotNull

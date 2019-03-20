@@ -51,9 +51,9 @@ public class ArgumentParser {
 
             if (counter < command.countTotalArguments()) {
                 if (counter >= command.getRequiredArgs().size()) {
-                    args.add(new Argument(command.getOptionalArgs().get(counter - command.getRequiredArgs().size()), argString));
+                    args.add(new Argument(command.getOptionalArgs().get(counter - command.getRequiredArgs().size()).getKey(), argString));
                 } else {
-                    args.add(new Argument(command.getRequiredArgs().get(counter), argString));
+                    args.add(new Argument(command.getRequiredArgs().get(counter).getKey(), argString));
                 }
                 counter++;
             }
