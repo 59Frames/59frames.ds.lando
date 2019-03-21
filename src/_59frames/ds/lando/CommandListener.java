@@ -11,8 +11,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.security.InvalidParameterException;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
 
@@ -101,16 +99,12 @@ public class CommandListener {
                 }
             }
 
-            var iterator = args.iterator();
-            while (iterator.hasNext()) {
-                var arg = iterator.next();
-
-                if (!c.getConstraints().has(arg.getKey()) || !ArgumentValidator.validate(arg, c.getConstraint(arg.getKey())))
-                    invalidArgument(arg.getKey());
-            }
-
-            if (ArgumentValidator.validate(args, c.getConstraints()))
+            if (ArgumentValidator.validate(args, c.getConstraints())) {
                 c.execute(args);
+            }
+            else {
+                ArgumentValidator.getInvalidArguments().forEach((argKey, arg) -> invalidArgument(argKey));
+            }
         } else {
             unknownCommand(key);
         }
@@ -157,8 +151,8 @@ public class CommandListener {
         }
 
         public Builder paramChar(final char pChar) {
-            if (Character.isSpaceChar(pChar))
-                throw new InvalidParameterException("Parameter char can't be space");
+            if (Character.isSpaceChar(pChar) || Character.isLetterOrDigit(pChar) || Character.isWhitespace(pChar))
+                throw new InvalidParameterException("Parameter char can't be space, letter or digit");
             this.parameterChar = pChar;
             return this;
         }
