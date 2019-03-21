@@ -89,7 +89,6 @@ public class CommandListener {
                 for (var name : c.getRequiredArgs()) {
                     if (!args.has(name.getKey())) {
                         missingArgument(name.getKey());
-                        return;
                     }
                 }
             }
@@ -119,10 +118,7 @@ public class CommandListener {
 
     @NotNull
     private String clean(@NotNull String string) {
-        string = string.trim().strip();
-        string = string.replaceAll("\\s{2,}", " ");
-
-        return string;
+        return string.trim().strip().replaceAll("\\s{2,}", " ");
     }
 
     private void unknownCommand(String command) {
@@ -139,17 +135,6 @@ public class CommandListener {
 
     private void invalidArgument(String argument) {
         output.println(String.format("invalid argument value thrown by { %s }", argument));
-    }
-
-    private void sortCommands() {
-        final var sortedMap = new TreeMap<String, Command>();
-
-        commands.entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByKey())
-                .forEachOrdered(x -> sortedMap.put(x.getKey(), x.getValue()));
-
-        this.commands = sortedMap;
     }
 
     public static class Builder {
