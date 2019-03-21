@@ -103,7 +103,7 @@ public class CommandListener {
                 c.execute(args);
             }
             else {
-                ArgumentValidator.getInvalidArguments().forEach((argKey, arg) -> invalidArgument(argKey));
+                ArgumentValidator.getInvalidArguments().forEach(this::invalidArgument);
             }
         } else {
             unknownCommand(key);
@@ -216,8 +216,10 @@ public class CommandListener {
                         .event(args -> {
                             instance.stop();
                             if (args.has("kill")) {
-                                if (args.get("kill").toBool())
-                                    System.out.println(0);
+                                if (args.get("kill").toBool()) {
+                                    System.gc();
+                                    System.exit(0);
+                                }
                             }
                         })
                         .addOptionalArgument("kill", Constraint.BOOLEAN)

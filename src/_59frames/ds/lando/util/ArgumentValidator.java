@@ -8,10 +8,11 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 
 public class ArgumentValidator {
-    private static final LinkedHashMap<String, Argument> invalidArguments = new LinkedHashMap<>();
+    private static final HashSet<String> invalidArguments = new HashSet<>();
 
     public static boolean validate(@NotNull final Arguments arguments, @NotNull final Constraints constraints) {
         invalidArguments.clear();
@@ -20,7 +21,7 @@ public class ArgumentValidator {
     }
 
     @Contract(pure = true)
-    public static LinkedHashMap<String, Argument> getInvalidArguments() {
+    public static HashSet<String> getInvalidArguments() {
         return invalidArguments;
     }
 
@@ -33,7 +34,7 @@ public class ArgumentValidator {
         while (iterator.hasNext()) {
             var arg = iterator.next();
             if (!constraints.has(arg.getKey()) || isInvalid(arg, constraints.get(arg.getKey()))) {
-                invalidArguments.put(arg.getKey(), arg);
+                invalidArguments.add(arg.getKey());
             }
         }
     }
