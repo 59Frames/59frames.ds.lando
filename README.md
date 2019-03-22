@@ -69,20 +69,21 @@ Moving on to basic commands
 public class Test {
     public static void main(String[] args){
         // So even tho this here is a perfectly good option
-        Command command = new Command(
-                        "say",
-                        arguments -> {
-                            // The event
-                            // ...
-                            String str = String.format("Saying: %s", arguments.getArgument("first"));
-        
-                            if (arguments.hasArgument("second"))
-                                str = String.format("%s %s", str, arguments.getArgument("second"));
-        
-                            System.out.println(str);
-                        },
-                        new String[]{"first"}, // Required Arguments
-                        new String[]{"second"}); // Optional Arguments
+        Command command = new Command("create", arguments -> {
+            arguments.forEach((key, arg) -> {
+                System.out.println(String.format("%s: %s", key, arg));
+            });
+        },
+                new Constraint("name", true),
+                new Constraint("age", false, Constraint.NUMBER),
+                new Constraint("birthdate", false, val -> {
+                    try {
+                        new SimpleDateFormat("mm.dd.yyyy").parse(val);
+                        return true
+                    } catch (ParseException ignore) {
+                        return false;
+                    }
+                }));
                         
         // I didn't really liked the way this looked alike
         // Overview = null
