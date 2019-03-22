@@ -84,23 +84,27 @@ public class Test {
                         new String[]{"first"}, // Required Arguments
                         new String[]{"second"}); // Optional Arguments
                         
-        // I do not really support it since it does look kind of ugly ...
+        // I didn't really liked the way this looked alike
         // Overview = null
-        CommandFactory
+        // So i came up with this:
         
         command = CommandFactory.factory()
-                .key("say")
+                .key("create")
                 .event(arguments -> {
-                    // The event
-                    // ...
-                    String str = String.format("Saying: %s", arguments.getArgument("first"));
-        
-                    if (arguments.hasArgument("second"))
-                        str = String.format("%s %s", str, arguments.getArgument("second"));
-                    System.out.println(str);
+                    arguments.forEach((key, arg) -> {
+                        System.out.println(String.format("%s: %s", key, arg));
+                    });
                 })
-                .addRequiredArgument("first")
-                .addOptionalArgument("second")
+                .addRequiredArgument("name")
+                .addOptionalArgument("age", Constraint.NUMBER)
+                .addOptionalArgument("birthdate", val -> {
+                    try {
+                        new SimpleDateFormat("mm.dd.yyyy").parse(val);
+                        return true;
+                    } catch (ParseException e) {
+                        return false;
+                    }
+                })
                 .build();
         
         // Only thing is that if you don't specify the key and or event,
