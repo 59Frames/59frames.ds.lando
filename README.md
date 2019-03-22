@@ -79,7 +79,7 @@ public class Test {
                 new Constraint("birthdate", false, val -> {
                     try {
                         new SimpleDateFormat("mm.dd.yyyy").parse(val);
-                        return true
+                        return true;
                     } catch (ParseException ignore) {
                         return false;
                     }
