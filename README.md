@@ -2,10 +2,6 @@
 
 A simple terminal util to create your own java console commands.
 
-## Getting Started
-
-Currently, lando is running on Java 11 but I will add downward compatibility within a few weeks.
-
 ### Installing
 
 1. Download the Jar file from our [releases](https://github.com/59Frames/59frames.ds.lando/releases)
