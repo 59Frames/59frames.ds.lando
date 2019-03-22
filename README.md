@@ -105,8 +105,7 @@ public class Test {
                     } catch (ParseException e) {
                         return false;
                     }
-                })
-                .build();
+                }).build();
         
         // Only thing is that if you don't specify the key and or event,
         // It will throw an exception
