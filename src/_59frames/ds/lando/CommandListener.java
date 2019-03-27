@@ -132,7 +132,7 @@ public class CommandListener {
     }
 
     public static class Builder {
-        private char parameterChar;
+        private char argumentSeparatorChar;
         private InputStream inputStream;
         private OutputStream outputStream;
         private boolean startWithBuild;
@@ -141,7 +141,7 @@ public class CommandListener {
         private boolean hasExitCommand;
 
         public Builder() {
-            this.parameterChar = ArgumentParser.DEFAULT_PARAM_CHAR;
+            this.argumentSeparatorChar = ArgumentParser.DEFAULT_PARAM_CHAR;
             this.outputStream = System.err;
             this.inputStream = System.in;
             this.hasNamedArguments = true;
@@ -150,10 +150,10 @@ public class CommandListener {
             this.startWithBuild = false;
         }
 
-        public Builder paramChar(final char pChar) {
+        public Builder argumentSeparatorChar(final char pChar) {
             if (Character.isSpaceChar(pChar) || Character.isLetterOrDigit(pChar) || Character.isWhitespace(pChar))
                 throw new InvalidParameterException("Parameter char can't be space, letter or digit");
-            this.parameterChar = pChar;
+            this.argumentSeparatorChar = pChar;
             return this;
         }
 
@@ -192,7 +192,7 @@ public class CommandListener {
         }
 
         public CommandListener build() {
-            final var instance = new CommandListener(inputStream, outputStream, new ArgumentParser(parameterChar, hasNamedArguments));
+            final var instance = new CommandListener(inputStream, outputStream, new ArgumentParser(argumentSeparatorChar, hasNamedArguments));
 
             if (hasHelpCommand) {
                 instance.add(new Command("help", args -> {

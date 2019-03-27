@@ -9,11 +9,11 @@ import org.jetbrains.annotations.NotNull;
 public class ArgumentParser {
     public static final char DEFAULT_PARAM_CHAR = '=';
 
-    private final char parameterChar;
+    private final char argumentSeparatorChar;
     private final boolean isNamed;
 
-    public ArgumentParser(final char parameterChar, final boolean isNamed) {
-        this.parameterChar = parameterChar;
+    public ArgumentParser(final char argumentSeparatorChar, final boolean isNamed) {
+        this.argumentSeparatorChar = argumentSeparatorChar;
         this.isNamed = isNamed;
     }
 
@@ -32,9 +32,9 @@ public class ArgumentParser {
     private Arguments parseNamed(@NotNull final Arguments args, @NotNull final String[] arr) {
         String[] argPair;
         for (var argString : arr) {
-            if (!argString.contains(String.format("%c", this.parameterChar))) continue;
+            if (!argString.contains(String.format("%c", this.argumentSeparatorChar))) continue;
 
-            argPair = argString.split(String.format("%c", this.parameterChar));
+            argPair = argString.split(String.format("%c", this.argumentSeparatorChar));
 
             if (argPair.length != 2) continue;
 
@@ -47,7 +47,7 @@ public class ArgumentParser {
     private Arguments parseUnnamed(@NotNull final Arguments args, @NotNull final String[] arr, @NotNull final Command command) {
         var counter = 0;
         for (var argString : arr) {
-            if (argString.equalsIgnoreCase(String.format("%c", this.parameterChar))) continue;
+            if (argString.equalsIgnoreCase(String.format("%c", this.argumentSeparatorChar))) continue;
 
             if (counter < command.countTotalArguments()) {
                 if (counter >= command.getRequiredArgs().size()) {
